@@ -32,7 +32,7 @@ public class SafeThread {
 	executorService.execute(digestMyName);
 	executorService.execute(digestMyName);
 	executorService.execute(digestMyName);
-	
+	executorService.shutdown();
 	}
 
 }
