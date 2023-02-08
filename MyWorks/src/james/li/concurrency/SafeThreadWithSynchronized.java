@@ -1,4 +1,4 @@
-package james.li;
+package james.li.concurrency;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
  * @author jamli
  *
  */
-public class UnsafeThread {
+public class SafeThreadWithSynchronized {
 	
 	public static void main(String[] args) throws NoSuchAlgorithmException {
 		
@@ -20,9 +20,15 @@ public class UnsafeThread {
 		 * Initialize the digestor outside of the runnable, so that all of the threads will use the same digestor
 		 */
 		MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+		
+		
 		Runnable digestMyName = () -> {
-			byte[] digestedName = messageDigest.digest("James".getBytes());
-			System.out.println(Arrays.toString(digestedName));
+			
+			synchronized(messageDigest) {
+				byte[] digestedName = messageDigest.digest("James".getBytes());
+				System.out.println(Arrays.toString(digestedName));	
+			}
+			
 		};
 		
 		ExecutorService executorService = Executors.newFixedThreadPool(3);
@@ -30,6 +36,8 @@ public class UnsafeThread {
 		executorService.execute(digestMyName);
 		executorService.execute(digestMyName);
 		executorService.shutdown();
+	
+		
 		
 	}
 	

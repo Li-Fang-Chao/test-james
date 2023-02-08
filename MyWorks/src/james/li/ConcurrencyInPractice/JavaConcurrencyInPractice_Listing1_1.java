@@ -1,4 +1,4 @@
-package james.li;
+package james.li.ConcurrencyInPractice;
 
 import java.util.ArrayList;
 import java.util.Collections;
