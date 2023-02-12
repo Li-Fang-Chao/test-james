@@ -1,4 +1,4 @@
-package james.li.concurrency;
+package james.li.javaconcurrencyutil;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
