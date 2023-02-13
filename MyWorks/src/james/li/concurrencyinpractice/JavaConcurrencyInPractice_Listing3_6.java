@@ -42,8 +42,12 @@ public class JavaConcurrencyInPractice_Listing3_6 {
 
 		unsafeStates.getStates()[0] = "AK->X1";
 		unsafeFinalStates.getStates()[0] = "LN->X1";
+		unmodifiableState.getStates()[0] = "SD->X1";
 		try {
-			unmodifiableState.getStates().set(0, "SD1->X1");
+			/**
+			 * this line will throw an exception, telling you the values can't be changed with UnsupportedOperationException
+			 */
+			unmodifiableState.getStatesAsList().set(0, "SD1->X1");
 		} catch (UnsupportedOperationException e) {
 			e.printStackTrace();
 		}
@@ -57,6 +61,11 @@ public class JavaConcurrencyInPractice_Listing3_6 {
 
 }
 
+/**
+ * states are made public in this class, values can be changed
+ * @author jamli
+ *
+ */
 class UnsafeStates {
 	private String[] states = new String[] { "AK", "AL" };
 
@@ -66,6 +75,11 @@ class UnsafeStates {
 
 }
 
+/**
+ * even declared as final, still can be changed
+ * @author jamli
+ *
+ */
 class UnsafeFinalStates {
 	private final String[] states = new String[] { "LN", "CC" };
 
@@ -74,10 +88,19 @@ class UnsafeFinalStates {
 	}
 }
 
+/**
+ * return the states as a immutable list
+ * @author jamli
+ *
+ */
 class UnsafeImmutableStates {
 	private final String[] states = new String[] { "SD", "HN" };
 
-	public List<String> getStates() {
+	public String[] getStates() {
+		return Arrays.copyOf(states, states.length);
+	}
+	
+	public List<String> getStatesAsList() {
 		return Collections.unmodifiableList(Arrays.asList(states));
 	}
 }
