@@ -3,9 +3,6 @@ package james.li.concurrencyinpractice;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * 
@@ -16,58 +13,57 @@ public class JavaConcurrencyInPractice_Listing3_6 {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		UnsafeFinalStates unsafeFinalStates = new UnsafeFinalStates();
+		UnsafeStatesFinal unsafeFinalStates = new UnsafeStatesFinal();
 		UnsafeStates unsafeStates = new UnsafeStates();
-		UnsafeImmutableStates unmodifiableState = new UnsafeImmutableStates();
+		ImmutableStates unmodifiableState = new ImmutableStates();
 
-		CountDownLatch latch = new CountDownLatch(1);
+		Runnable printValues = () -> {
+			System.out.println("Printing states array");
+			for (String state : unsafeStates.getStates()) {
+				System.out.println(state);
 
-		Runnable countDown = () -> {
+			}
+
+			System.out.println("Printing final states array");
 			for (String state : unsafeFinalStates.getStates()) {
 				System.out.println(state);
 
 			}
 
-			for (String state : unsafeStates.getStates()) {
-				System.out.println(state);
-
-			}
-			
+			System.out.println("Printing immutable states array");
 			for (String state : unmodifiableState.getStates()) {
 				System.out.println(state);
 
 			}
-			latch.countDown();
 		};
-
-		unsafeStates.getStates()[0] = "AK->X1";
-		unsafeFinalStates.getStates()[0] = "LN->X1";
-		unmodifiableState.getStates()[0] = "SD->X1";
+		
+		unsafeStates.getStates()[0] = "Value Changed";
+		unsafeFinalStates.getStates()[0] = "Value Changed";
+		unmodifiableState.getStates()[0] = "Value Changed";
 		try {
 			/**
-			 * this line will throw an exception, telling you the values can't be changed with UnsupportedOperationException
+			 * this line will throw an exception, telling you the values can't be changed
+			 * with UnsupportedOperationException
 			 */
-			unmodifiableState.getStatesAsList().set(0, "SD1->X1");
+			unmodifiableState.getStatesAsList().set(0, "Value Changed");
 		} catch (UnsupportedOperationException e) {
 			e.printStackTrace();
 		}
+		
+		new Thread(printValues).run();
 
-		ExecutorService executorService = Executors.newFixedThreadPool(1);
-		executorService.execute(countDown);
-		executorService.shutdown();
-
-		latch.await();
 	}
 
 }
 
 /**
  * states are made public in this class, values can be changed
+ * 
  * @author jamli
  *
  */
 class UnsafeStates {
-	private String[] states = new String[] { "AK", "AL" };
+	private String[] states = new String[] { "V1", "V2" };
 
 	public String[] getStates() {
 		return states;
@@ -77,11 +73,12 @@ class UnsafeStates {
 
 /**
  * even declared as final, still can be changed
+ * 
  * @author jamli
  *
  */
-class UnsafeFinalStates {
-	private final String[] states = new String[] { "LN", "CC" };
+class UnsafeStatesFinal {
+	private String[] states = new String[] { "V1", "V2" };
 
 	public String[] getStates() {
 		return states;
@@ -90,16 +87,16 @@ class UnsafeFinalStates {
 
 /**
  * return the states as a immutable list
+ * 
  * @author jamli
  *
  */
-class UnsafeImmutableStates {
-	private final String[] states = new String[] { "SD", "HN" };
-
+class ImmutableStates {
+	private String[] states = new String[] { "V1", "V2" };
 	public String[] getStates() {
 		return Arrays.copyOf(states, states.length);
 	}
-	
+
 	public List<String> getStatesAsList() {
 		return Collections.unmodifiableList(Arrays.asList(states));
 	}
