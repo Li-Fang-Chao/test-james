@@ -26,10 +26,6 @@ class ThreadSafeMapDecorator implements Map<Object, Object> {
 
 	private Map<Object, Object> innerMap = new HashMap<Object, Object>();
 
-	public ThreadSafeMapDecorator(Map<Object, Object> map) {
-		this.innerMap = map;
-	}
-
 	@Override
 	public int size() {
 		return innerMap.size();
