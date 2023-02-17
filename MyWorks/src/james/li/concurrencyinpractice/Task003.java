@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 /**
@@ -18,11 +16,10 @@ public class Task003 {
 	public static void main(String[] args) throws InterruptedException {
 
 		Map<Object, Object> map = new HashMap<Object, Object>();
-		
+
 		System.out.println("validating HashMap");
 		validateMapEntrySize(map);
-		
-		
+
 		Map<Object, Object> threadSafeMap = new ThreadSafeMapDecorator();
 		System.out.println("validating ThreadSafeMapDecorator");
 		validateMapEntrySize(threadSafeMap);
@@ -37,18 +34,27 @@ public class Task003 {
 	 */
 	private static void validateMapEntrySize(Map<Object, Object> map) throws InterruptedException {
 
+		/**
+		 * Add initial value to the map
+		 */
 		map.put("initialValue", "Task003");
 
+		/**
+		 * Adding 100,000 entries to the map
+		 */
 		Runnable addValuesToMap = () -> {
 			IntStream.range(0, 100000).forEach(number -> {
 				map.put(number, number);
 			});
 		};
 
-		ExecutorService executorService = Executors.newFixedThreadPool(2);
-		executorService.execute(addValuesToMap);
-		executorService.shutdown();
+		new Thread(addValuesToMap).start();
 
+		/**
+		 * check that the initial value is always there for HashMap this will fail
+		 * because by adding the new entries to the map, HashMap will expand the size
+		 * and lost the initial entry when this is in process is in progress
+		 */
 		int i = 0;
 		while (i++ < 1000000) {
 			if (map.get("initialValue") == null) {
