@@ -2,8 +2,12 @@ package james.li.concurrencyinpractice;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.IntStream;
 
 /**
  * 
@@ -14,11 +18,38 @@ public class Task004 {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		Runnable runnable = () -> {
-
-		};
-
+		Map map = new HashMap();
+		System.out.println("validating HashMap");
+		validateMapEntrySize(map);
+		Map<Object, Object> threadSafeMap = new ThreadSafeMapDecorator();
+		System.out.println("validating ThreadSafeMapDecorator");
+        validateMapEntrySize(threadSafeMap);
 	}
+
+	private static void validateMapEntrySize(Map<Object, Object> map) {
+		CompletableFuture<Void> future1 = CompletableFuture.runAsync(() -> {
+			try {
+				IntStream.range(0,50000).forEach(number -> map.put(UUID.randomUUID().toString(), number));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+        
+        CompletableFuture<Void> future2 = CompletableFuture.runAsync(() -> {
+			try {
+				IntStream.range(0,50000).forEach(number -> map.put(UUID.randomUUID().toString(), number));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+        List<CompletableFuture<Void>> futures = List.of(future1, future2);
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
+        System.out.println ("Map size: " + map.size());
+	}
+	
+	
 
 }
 
