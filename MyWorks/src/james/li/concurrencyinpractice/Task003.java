@@ -20,8 +20,8 @@ public class Task003 {
 		System.out.println("validating HashMap");
 		validateMapThreadSafty(map);
 
-		Map<Object, Object> threadSafeMap = new ThreadSafeMapDecorator();
-		System.out.println("validating ThreadSafeMapDecorator");
+		Map<Object, Object> threadSafeMap = new ImprovedMap();
+		System.out.println("validating ImprovedMap");
 		validateMapThreadSafty(threadSafeMap);
 	}
 
@@ -65,7 +65,7 @@ public class Task003 {
 
 }
 
-class ThreadSafeMapDecorator implements Map<Object, Object> {
+class ImprovedMap implements Map<Object, Object> {
 
 	private Map<Object, Object> innerMap = new HashMap<Object, Object>();
 
