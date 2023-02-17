@@ -20,7 +20,7 @@ public class Task003 {
 		System.out.println("validating HashMap");
 		validateMapThreadSafty(map);
 
-		Map<Object, Object> threadSafeMap = new ImprovedMap();
+		Map<Object, Object> threadSafeMap = new ImprovedMap(map);
 		System.out.println("validating ImprovedMap");
 		validateMapThreadSafty(threadSafeMap);
 	}
@@ -33,7 +33,7 @@ public class Task003 {
 	 * @throws InterruptedException
 	 */
 	private static void validateMapThreadSafty(Map<Object, Object> map) throws InterruptedException {
-
+		
 		/**
 		 * Add initial value to the map
 		 */
@@ -66,8 +66,12 @@ public class Task003 {
 }
 
 class ImprovedMap implements Map<Object, Object> {
-
-	private Map<Object, Object> innerMap = new HashMap<Object, Object>();
+	
+	private Map<Object, Object> innerMap;
+	
+	public ImprovedMap(Map map) {
+		this.innerMap = map;
+	}
 
 	@Override
 	public int size() {
