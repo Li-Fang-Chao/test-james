@@ -69,8 +69,8 @@ class ImprovedMap implements Map<Object, Object> {
 	
 	private Map<Object, Object> innerMap;
 	
-	public ImprovedMap(Map map) {
-		this.innerMap = map;
+	public ImprovedMap(Map<Object, Object> map) {
+		this.innerMap = new HashMap<Object, Object>(map);
 	}
 
 	@Override
