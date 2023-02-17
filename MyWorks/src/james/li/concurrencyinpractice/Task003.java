@@ -18,11 +18,11 @@ public class Task003 {
 		Map<Object, Object> map = new HashMap<Object, Object>();
 
 		System.out.println("validating HashMap");
-		validateMapEntrySize(map);
+		validateMapThreadSafty(map);
 
 		Map<Object, Object> threadSafeMap = new ThreadSafeMapDecorator();
 		System.out.println("validating ThreadSafeMapDecorator");
-		validateMapEntrySize(threadSafeMap);
+		validateMapThreadSafty(threadSafeMap);
 	}
 
 	/**
@@ -32,7 +32,7 @@ public class Task003 {
 	 * @param map
 	 * @throws InterruptedException
 	 */
-	private static void validateMapEntrySize(Map<Object, Object> map) throws InterruptedException {
+	private static void validateMapThreadSafty(Map<Object, Object> map) throws InterruptedException {
 
 		/**
 		 * Add initial value to the map
