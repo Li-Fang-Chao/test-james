@@ -2,11 +2,10 @@ package james.li.concurrencyinpractice;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
 
 /**
@@ -14,42 +13,49 @@ import java.util.stream.IntStream;
  * @author jamli
  *
  */
-public class Task004 {
+public class Task003 {
 
 	public static void main(String[] args) throws InterruptedException {
 
-		Map map = new HashMap();
+		Map<Object, Object> map = new HashMap<Object, Object>();
+		
 		System.out.println("validating HashMap");
 		validateMapEntrySize(map);
+		
+		
 		Map<Object, Object> threadSafeMap = new ThreadSafeMapDecorator();
 		System.out.println("validating ThreadSafeMapDecorator");
-        validateMapEntrySize(threadSafeMap);
+		validateMapEntrySize(threadSafeMap);
 	}
 
-	private static void validateMapEntrySize(Map<Object, Object> map) {
-		CompletableFuture<Void> future1 = CompletableFuture.runAsync(() -> {
-			try {
-				IntStream.range(0,50000).forEach(number -> map.put(UUID.randomUUID().toString(), number));
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+	/**
+	 * validate the map is thread safe by adding an initial value to the map, and
+	 * check that entry is always there when adding new values to the map
+	 * 
+	 * @param map
+	 * @throws InterruptedException
+	 */
+	private static void validateMapEntrySize(Map<Object, Object> map) throws InterruptedException {
+
+		map.put("initialValue", "Task003");
+
+		Runnable addValuesToMap = () -> {
+			IntStream.range(0, 100000).forEach(number -> {
+				map.put(number, number);
+			});
+		};
+
+		ExecutorService executorService = Executors.newFixedThreadPool(2);
+		executorService.execute(addValuesToMap);
+		executorService.shutdown();
+
+		int i = 0;
+		while (i++ < 1000000) {
+			if (map.get("initialValue") == null) {
+				System.out.println("initialValue is lost at the check " + i + ". Current Map Size " + map.size());
 			}
-		});
-        
-        CompletableFuture<Void> future2 = CompletableFuture.runAsync(() -> {
-			try {
-				IntStream.range(0,50000).forEach(number -> map.put(UUID.randomUUID().toString(), number));
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
-        List<CompletableFuture<Void>> futures = List.of(future1, future2);
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
-        System.out.println ("Map size: " + map.size());
+		}
 	}
-	
-	
 
 }
 
