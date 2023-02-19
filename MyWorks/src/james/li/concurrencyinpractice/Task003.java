@@ -51,9 +51,9 @@ public class Task003 {
 		new Thread(addValuesToMap).start();
 
 		/**
-		 * check that the initial value is always there for HashMap this will fail
+		 * checking that the initial value is always there. For HashMap this will fail
 		 * because by adding the new entries to the map, HashMap will expand the size
-		 * and lost the initial entry when this is in process is in progress
+		 * of the internal buckets and lost the initial entry during this process
 		 */
 		int i = 0;
 		while (i++ < 1000000) {
