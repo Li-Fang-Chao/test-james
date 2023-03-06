@@ -1,5 +1,6 @@
 package james.li.concurrencyinpractice;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -24,6 +25,10 @@ public class Task004 {
 		System.out.println("Running 10 job with ConcurrentHashMap " + tester.timeTasks(10, addValuesToMap(new ConcurrentHashMap())));
 		System.out.println("Running 100 job with ConcurrentHashMap " + tester.timeTasks(100, addValuesToMap(new ConcurrentHashMap())));
 		System.out.println("Running 1000 job with ConcurrentHashMap " + tester.timeTasks(1000, addValuesToMap(new ConcurrentHashMap())));
+		
+		System.out.println("Running 10 job with Collections.synchronizedMap(new HashMap()) " + tester.timeTasks(10, addValuesToMap(Collections.synchronizedMap(new HashMap()))));
+		System.out.println("Running 100 job with Collections.synchronizedMap(new HashMap()) " + tester.timeTasks(100, addValuesToMap(Collections.synchronizedMap(new HashMap()))));
+		System.out.println("Running 1000 job with Collections.synchronizedMap(new HashMap()) " + tester.timeTasks(1000, addValuesToMap(Collections.synchronizedMap(new HashMap()))));
 	}
 
 	/**
