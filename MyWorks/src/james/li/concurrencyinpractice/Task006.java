@@ -11,7 +11,7 @@ import java.net.http.HttpResponse;
  * @author jamli
  *
  */
-public class Task6 {
+public class Task006 {
 
 	public static void main(String[] args) throws InterruptedException {
 		
