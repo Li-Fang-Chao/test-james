@@ -39,8 +39,8 @@ public class Task004 {
 	private static Runnable addValuesToMap(Map amap) {
 		Runnable addValuesToMap =() -> {
 			int i = 0;
-			while(i++ < 10000) {
-				amap.put(i, UUID.randomUUID().toString());
+			while(i++ < 100000) {
+				amap.put(i, i);
 			}
 		};
 		return addValuesToMap;
