@@ -23,11 +23,6 @@ public class Task006 {
 	
 	}
 
-	/**
-	 * Add 10,000 entries to the given map
-	 * @param amap
-	 * @return the Runnable that runs this task
-	 */
 	private static Runnable getNBAGamePlayers() {
 		
 		
@@ -60,7 +55,7 @@ public class Task006 {
 		System.out.println("Getting google index page");
 		
 		
-		Runnable getNBAPlayers =() -> {
+		Runnable getGoogleHomePage =() -> {
 			
 			HttpRequest request = HttpRequest.newBuilder()
 					.uri(URI.create("https://google.com"))
@@ -77,7 +72,7 @@ public class Task006 {
 			}
 			
 		};
-		return getNBAPlayers;
+		return getGoogleHomePage;
 	}
 
 }
