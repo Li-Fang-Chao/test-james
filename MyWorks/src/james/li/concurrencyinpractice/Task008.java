@@ -11,15 +11,15 @@ import java.net.http.HttpResponse;
  * @author jamli
  *
  */
-public class Task006 {
+public class Task008 {
 
 	public static void main(String[] args) throws InterruptedException {
 		
 		TestHarness tester = new TestHarness();
 		
-		System.out.println(tester.timeTasks(2, getNBAGamePlayers(), 10, false));
+		System.out.println(tester.timeTasks(2, getNBAGamePlayers(), 10, true));
 		
-		System.out.println(tester.timeTasks(2, getGoogleHomePage(), 10, false));
+		System.out.println(tester.timeTasks(2, getGoogleHomePage(), 10, true));
 	
 	}
 
