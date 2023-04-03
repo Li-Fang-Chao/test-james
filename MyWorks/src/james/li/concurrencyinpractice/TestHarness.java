@@ -12,7 +12,7 @@ import java.util.concurrent.TimeoutException;
 public class TestHarness {
 
 	/**
-	 * Blocking Thread that will start all threads at the same time. 
+	 * Blocking Thread that will start all threads at the same time.
 	 */
 	private final class BlockingThread extends Thread {
 		private final CountDownLatch startGate;
@@ -68,8 +68,9 @@ public class TestHarness {
 	}
 
 	/**
-	 * Run tasks in threads
-	 * By default, all tasks are started in a separate thread without using thread pool
+	 * Run tasks in threads By default, all tasks are started in a separate thread
+	 * without using thread pool
+	 * 
 	 * @param nThreads
 	 * @param task
 	 * @return
@@ -83,46 +84,55 @@ public class TestHarness {
 
 	/**
 	 * 
-	 * @param nThreads how many threads will be started for the task
-	 * @param task the task that's going to be run in threads
+	 * @param nThreads         how many threads will be started for the task
+	 * @param task             the task that's going to be run in threads
 	 * @param timeoutInSeconds
-	 * @param withPool controls whether to run the tasks in a thread pool
+	 * @param withPool         controls whether to run the tasks in a thread pool
 	 * @return
 	 * @throws InterruptedException
 	 */
-	public Duration timeTasks(int nThreads, final Runnable task, long timeoutInSeconds, boolean withPool, boolean startAllThreads) throws InterruptedException {
+	public Duration timeTasks(int nThreads, final Runnable task, long timeoutInSeconds, boolean withPool,
+			boolean startAllThreads) throws InterruptedException {
 
 		final CountDownLatch startGate = new CountDownLatch(1);
 		final CountDownLatch endGate = new CountDownLatch(nThreads);
-		
-		TimingThreadPool pool = null;
-		
-		if(withPool) {
-			pool = new TimingThreadPool(nThreads, nThreads, timeoutInSeconds, startAllThreads);
-		}
 
-		
-		if(withPool) {
-			System.out.println("Running tasks in thread pool with startAllThreads  = " + startAllThreads);
-		}else {
-			System.out.println("Running tasks in new threads");
-		}
-		
-		
-		
-		for (int i = 0; i < nThreads; i++) {
-			if(withPool) {
-				pool.execute(new BlockingThread(startGate, task, timeoutInSeconds, endGate));
-			}else {
-				new BlockingThread(startGate, task, timeoutInSeconds, endGate).start();
+		TimingThreadPool pool = null;
+		long start = System.nanoTime();
+
+		try {
+
+			if (withPool) {
+				pool = new TimingThreadPool(nThreads, nThreads, timeoutInSeconds, startAllThreads);
+			}
+
+			if (withPool) {
+				System.out.println("Running tasks in thread pool with startAllThreads  = " + startAllThreads);
+			} else {
+				System.out.println("Running tasks in new threads");
+			}
+
+			for (int i = 0; i < nThreads; i++) {
+				if (withPool) {
+					pool.execute(new BlockingThread(startGate, task, timeoutInSeconds, endGate));
+				} else {
+					new BlockingThread(startGate, task, timeoutInSeconds, endGate).start();
+				}
+			}
+
+			start = System.nanoTime();
+			startGate.countDown();
+			endGate.await();
+
+		} finally {
+			if (pool != null) {
+				pool.shutdown();
 			}
 		}
-		long start = System.nanoTime();
-		startGate.countDown();
-		endGate.await();
+
 		long end = System.nanoTime();
 		return Duration.ofNanos(end - start);
 
 	}
-	
+
 }
