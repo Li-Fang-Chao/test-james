@@ -17,8 +17,9 @@ public class Task007 {
 		
 		TestHarness tester = new TestHarness();
 		
-		System.out.println(tester.timeTasks(4, getNBAGamePlayers(), 10, true, false));
-		System.out.println(tester.timeTasks(4, getNBAGamePlayers(), 10, true, true));
+		System.out.println(tester.timeTasks(3, getNBAGamePlayers(), 10, false, false));
+		System.out.println(tester.timeTasks(3, getNBAGamePlayers(), 10, true, false));
+		System.out.println(tester.timeTasks(3, getNBAGamePlayers(), 10, true, true));
 	
 	}
 
@@ -30,7 +31,7 @@ public class Task007 {
 			System.out.println("Getting all NBA players from rapidapi");
 			
 			HttpRequest request = HttpRequest.newBuilder()
-					.uri(URI.create("https://free-nba.p.rapidapi.com/players?page=0&per_page=300"))
+					.uri(URI.create("https://free-nba.p.rapidapi.com/players?page=0&per_page=3"))
 					.header("X-RapidAPI-Key", "77f0442583msh830f5aef3be6049p153fe0jsnd0b59859ff4e")
 					.header("X-RapidAPI-Host", "free-nba.p.rapidapi.com")
 					.method("GET", HttpRequest.BodyPublishers.noBody())

@@ -101,13 +101,19 @@ public class TestHarness {
 			pool = new TimingThreadPool(nThreads, nThreads, timeoutInSeconds, startAllThreads);
 		}
 
+		
+		if(withPool) {
+			System.out.println("Running tasks in thread pool with startAllThreads  = " + startAllThreads);
+		}else {
+			System.out.println("Running tasks in new threads");
+		}
+		
+		
+		
 		for (int i = 0; i < nThreads; i++) {
-			
 			if(withPool) {
-				System.out.println("Running tasks in thread pool");
 				pool.execute(new BlockingThread(startGate, task, timeoutInSeconds, endGate));
 			}else {
-				System.out.println("Running tasks in new threads");
 				new BlockingThread(startGate, task, timeoutInSeconds, endGate).start();
 			}
 		}
