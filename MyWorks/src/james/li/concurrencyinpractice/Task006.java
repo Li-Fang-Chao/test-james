@@ -17,9 +17,9 @@ public class Task006 {
 		
 		TestHarness tester = new TestHarness();
 		
-		System.out.println(tester.timeTasks(2, getNBAGamePlayers(), 10, false));
+		System.out.println(tester.timeTasks(2, getNBAGamePlayers(), 10, false, false));
 		
-		System.out.println(tester.timeTasks(2, getGoogleHomePage(), 10, false));
+		System.out.println(tester.timeTasks(2, getGoogleHomePage(), 10, false, false));
 	
 	}
 

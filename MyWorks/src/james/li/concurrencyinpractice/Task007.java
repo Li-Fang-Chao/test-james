@@ -17,9 +17,8 @@ public class Task007 {
 		
 		TestHarness tester = new TestHarness();
 		
-		System.out.println(tester.timeTasks(2, getNBAGamePlayers(), 10, true));
-		
-		System.out.println(tester.timeTasks(2, getGoogleHomePage(), 10, true));
+		System.out.println(tester.timeTasks(4, getNBAGamePlayers(), 10, true, false));
+		System.out.println(tester.timeTasks(4, getNBAGamePlayers(), 10, true, true));
 	
 	}
 
@@ -48,31 +47,6 @@ public class Task007 {
 			
 		};
 		return getNBAPlayers;
-	}
-	
-	private static Runnable getGoogleHomePage() {
-		
-		System.out.println("Getting google index page");
-		
-		
-		Runnable getGoogleHomePage =() -> {
-			
-			HttpRequest request = HttpRequest.newBuilder()
-					.uri(URI.create("https://google.com"))
-					.method("GET", HttpRequest.BodyPublishers.noBody())
-					.build();
-			HttpResponse<String> response;
-			try {
-				response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-				System.out.println(response.body());
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-		};
-		return getGoogleHomePage;
 	}
 
 }

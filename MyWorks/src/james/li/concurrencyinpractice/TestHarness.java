@@ -67,13 +67,30 @@ public class TestHarness {
 		}
 	}
 
+	/**
+	 * Run tasks in threads
+	 * By default, all tasks are started in a separate thread without using thread pool
+	 * @param nThreads
+	 * @param task
+	 * @return
+	 * @throws InterruptedException
+	 */
 	public Duration timeTasks(int nThreads, final Runnable task) throws InterruptedException {
 
-		return timeTasks(nThreads, task, 0, false);
+		return timeTasks(nThreads, task, 0, false, false);
 
 	}
 
-	public Duration timeTasks(int nThreads, final Runnable task, long timeoutInSeconds, boolean withPool) throws InterruptedException {
+	/**
+	 * 
+	 * @param nThreads how many threads will be started for the task
+	 * @param task the task that's going to be run in threads
+	 * @param timeoutInSeconds
+	 * @param withPool controls whether to run the tasks in a thread pool
+	 * @return
+	 * @throws InterruptedException
+	 */
+	public Duration timeTasks(int nThreads, final Runnable task, long timeoutInSeconds, boolean withPool, boolean startAllThreads) throws InterruptedException {
 
 		final CountDownLatch startGate = new CountDownLatch(1);
 		final CountDownLatch endGate = new CountDownLatch(nThreads);
@@ -81,15 +98,16 @@ public class TestHarness {
 		TimingThreadPool pool = null;
 		
 		if(withPool) {
-			pool = new TimingThreadPool(nThreads, nThreads, timeoutInSeconds, false);
-			
+			pool = new TimingThreadPool(nThreads, nThreads, timeoutInSeconds, startAllThreads);
 		}
 
 		for (int i = 0; i < nThreads; i++) {
 			
 			if(withPool) {
-				pool.execute(new BlockingThread(startGate, task, timeoutInSeconds, endGate));	
+				System.out.println("Running tasks in thread pool");
+				pool.execute(new BlockingThread(startGate, task, timeoutInSeconds, endGate));
 			}else {
+				System.out.println("Running tasks in new threads");
 				new BlockingThread(startGate, task, timeoutInSeconds, endGate).start();
 			}
 		}
